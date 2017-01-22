@@ -21,54 +21,57 @@ namespace Minesweeper
     /// </summary>
     public partial class Playfield : UserControl
     {
-        List<Cell> cells = new List<Cell>();
         private Minefield game;
-        private int bombCount = 10;
-
+        public event EventHandler OnNewGame;
 
         public Playfield()
         {
             InitializeComponent();
-
-            CreateMineField();
-        }
-
-        private void CreateMineField()
-        {
-            FinalScreen.Visibility = Visibility.Hidden;
-
-            ClearMinefield();
-            int index = 0;
-
-            cells = new List<Cell>();
-            foreach (GameCell child in Field.Children)
-            {
-                var cell = new Cell(index++);
-                child.GameElement = cell;
-                cells.Add(cell);
-                child.OnSelected += Child_OnSelected;
-            }
         }
 
         private void ClearMinefield()
         {
-            game = null;
+            FinalScreen.Visibility = Visibility.Hidden;
+            Field.Visibility = Visibility.Visible;
+
+            if (game != null)
+            {
+                game.PropertyChanged -= Game_PropertyChanged;
+                game = null;
+            }
+
             foreach (GameCell child in Field.Children)
             {
                 child.OnSelected -= Child_OnSelected;
                 child.GameElement = null;
+            }
+
+            Field.Children.Clear();
+        }
+
+        internal void Initialize(Minefield mines)
+        {
+            ClearMinefield();
+
+            Field.Rows = mines.Height;
+            Field.Columns = mines.Width;
+            game = mines;
+            game.PropertyChanged += Game_PropertyChanged;
+            int cellCount = mines.Height * mines.Width;
+            for (int i=0;i<cellCount;++i)
+            {
+                GameCell cell = new GameCell()
+                {
+                    GameElement = game.Playfield[i]
+                };
+                Field.Children.Add(cell);
+                cell.OnSelected += Child_OnSelected;
             }
         }
 
         private void Child_OnSelected(object sender, EventArgs e)
         {
             var cell = sender as GameCell;
-
-            if (game == null)
-            {
-                game = new Minefield(cells, Field.Columns, cell.GameElement.Index, bombCount);
-                game.PropertyChanged += Game_PropertyChanged;
-            }
 
             game.SelectIndex(cell.GameElement.Index);
         }
@@ -92,12 +95,10 @@ namespace Minesweeper
             Debug.WriteLine(result);
         }
 
-        private void FinalScreen_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private void Button_NewGame(object sender, RoutedEventArgs e)
         {
-            if(e.ClickCount == 2)
-            {
-                CreateMineField();
-            }
+            OnNewGame?.Invoke(this, new EventArgs());
+            ClearMinefield();
         }
     }
 }

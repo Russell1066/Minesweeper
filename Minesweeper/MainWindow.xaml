@@ -7,6 +7,23 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="525">
     <Grid>
-        <local:Playfield/>
+        <Grid Name="Menu">
+            <Button Content="9x9x10" HorizontalAlignment="Center" VerticalAlignment="Center" Width="75" Margin="0" Click="Button_Click9x9" Height="20" RenderTransformOrigin="0.5,0.5">
+                <Button.RenderTransform>
+                    <TransformGroup>
+                        <TranslateTransform Y="-30"/>
+                    </TransformGroup>
+                </Button.RenderTransform>
+            </Button>
+            <Button Content="16x16x40" HorizontalAlignment="Center" VerticalAlignment="Center" Width="75" Click="Button_Click_16x16" Height="20" />
+            <Button Content="30x16x99" HorizontalAlignment="Center" VerticalAlignment="Center" Width="75" Margin="0" Click="Button_Click_30x16" Height="20" RenderTransformOrigin="0.5,0.5" >
+                <Button.RenderTransform>
+                    <TransformGroup>
+                        <TranslateTransform Y="30"/>
+                    </TransformGroup>
+                </Button.RenderTransform>
+            </Button>
+        </Grid>
+        <local:Playfield Visibility="Hidden" x:Name="Game"/>
     </Grid>
 </Window>

@@ -10,12 +10,15 @@ namespace Minesweeper
 {
     class Minefield : INotifyPropertyChanged
     {
-        private List<Cell> Playfield;
         private static List<Point> Neighbors;
-        private int Width;
-        private int Height;
-        private int NumBombs;
+
+        public List<Cell> Playfield { get; private set; }
+        public int Width { get; private set; }
+        public int Height { get; private set; }
+        public int NumBombs { get; private set; }
+
         private Random random = new Random();
+        private bool Initialized = false;
 
         private GameState _State;
         public GameState State
@@ -79,23 +82,21 @@ namespace Minesweeper
                 }
             }
         }
-
-        public Minefield(ICollection<Cell> cells, int width, int start, int numBombs)
+        public Minefield(int height, int width, int numBombs)
         {
-            State = GameState.Playing;
-            int count = cells.Count;
-            Debug.Assert((count % width) == 0);
+            Debug.Assert(width * height - 9 >= numBombs);
+            Debug.Assert(width > 0 && height > 0 && numBombs > 0);
 
             Width = width;
-            Height = count / width;
+            Height = height;
             NumBombs = numBombs;
+            int count = Width * Height;
 
-            Debug.Assert(Width > 0 && Height > 0 && numBombs > 0 && numBombs < (Width * Height - 9));
-            Debug.Assert(start >= 0 && start < count);
-
-            Playfield = cells.ToList();
-
-            GenerateField(IndexToPoint(start), numBombs);
+            Playfield = new List<Cell>(count);
+            for (int i = 0; i < count; ++i)
+            {
+                Playfield.Add(new Cell(i));
+            }
         }
 
         private List<int> GetNeighbors(Point p)
@@ -122,6 +123,12 @@ namespace Minesweeper
 
         public bool SelectPoint(Point p)
         {
+            if(!Initialized)
+            {
+                GenerateField(p, NumBombs);
+                Initialized = true;
+            }
+
             if (GetCell(p).Mine == Cell.MineState.Bomb)
             {
                 State = GameState.Lost;

@@ -7,91 +7,13 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
-        <UniformGrid Rows="9" Columns="9" Margin="0,0,4,4" Name="Field" >
-            <local:GameCell/>
-            <local:GameCell/>
-            <local:GameCell/>
-            <local:GameCell/>
-            <local:GameCell/>
-            <local:GameCell/>
-            <local:GameCell/>
-            <local:GameCell/>
-            <local:GameCell/>
-            <local:GameCell/>
-            <local:GameCell/>
-            <local:GameCell/>
-            <local:GameCell/>
-            <local:GameCell/>
-            <local:GameCell/>
-            <local:GameCell/>
-            <local:GameCell/>
-            <local:GameCell/>
-            <local:GameCell/>
-            <local:GameCell/>
-            <local:GameCell/>
-            <local:GameCell/>
-            <local:GameCell/>
-            <local:GameCell/>
-            <local:GameCell/>
-            <local:GameCell/>
-            <local:GameCell/>
-            <local:GameCell/>
-            <local:GameCell/>
-            <local:GameCell/>
-            <local:GameCell/>
-            <local:GameCell/>
-            <local:GameCell/>
-            <local:GameCell/>
-            <local:GameCell/>
-            <local:GameCell/>
-            <local:GameCell/>
-            <local:GameCell/>
-            <local:GameCell/>
-            <local:GameCell/>
-            <local:GameCell/>
-            <local:GameCell/>
-            <local:GameCell/>
-            <local:GameCell/>
-            <local:GameCell/>
-            <local:GameCell/>
-            <local:GameCell/>
-            <local:GameCell/>
-            <local:GameCell/>
-            <local:GameCell/>
-            <local:GameCell/>
-            <local:GameCell/>
-            <local:GameCell/>
-            <local:GameCell/>
-            <local:GameCell/>
-            <local:GameCell/>
-            <local:GameCell/>
-            <local:GameCell/>
-            <local:GameCell/>
-            <local:GameCell/>
-            <local:GameCell/>
-            <local:GameCell/>
-            <local:GameCell/>
-            <local:GameCell/>
-            <local:GameCell/>
-            <local:GameCell/>
-            <local:GameCell/>
-            <local:GameCell/>
-            <local:GameCell/>
-            <local:GameCell/>
-            <local:GameCell/>
-            <local:GameCell/>
-            <local:GameCell/>
-            <local:GameCell/>
-            <local:GameCell/>
-            <local:GameCell/>
-            <local:GameCell/>
-            <local:GameCell/>
-            <local:GameCell/>
-            <local:GameCell/>
-            <local:GameCell/>
+        <UniformGrid Margin="0,0,4,4" Name="Field" Visibility="Hidden">
         </UniformGrid>
-        <Grid Name="FinalScreen" Background="#FF474747" Opacity=".70" Visibility="Hidden" MouseLeftButtonDown="FinalScreen_MouseLeftButtonDown">
-            <TextBlock Name="Result" Text="Game Over" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="36" Foreground="White"/>
+        <Grid Name="FinalScreen" Visibility="Visible" >
+            <Grid Background="#FF474747" Opacity=".70" Visibility="Visible" >
+                <TextBlock Name="Result" Text="Game Over" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="36" Foreground="White"/>
+            </Grid>
+            <Button Content="New Game" HorizontalAlignment="Center" VerticalAlignment="Bottom" Width="76" Height="20" Margin="0,0,0,15" Click="Button_NewGame" />
         </Grid>
     </Grid>
 
