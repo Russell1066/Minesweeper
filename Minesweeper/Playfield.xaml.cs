@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Diagnostics;
+using System.Windows.Threading;
 
 namespace Minesweeper
 {
@@ -45,8 +46,6 @@ namespace Minesweeper
                 child.OnSelected -= Child_OnSelected;
                 child.GameElement = null;
             }
-
-            Field.Children.Clear();
         }
 
         internal void Initialize(Minefield mines)
@@ -58,7 +57,15 @@ namespace Minesweeper
             game = mines;
             game.PropertyChanged += Game_PropertyChanged;
             int cellCount = mines.Height * mines.Width;
-            for (int i=0;i<cellCount;++i)
+            int i = 0;
+            for (; i < cellCount && i < Field.Children.Count; ++i)
+            {
+                GameCell cell = Field.Children[i] as GameCell;
+                cell.GameElement = game.Playfield[i];
+                cell.OnSelected += Child_OnSelected;
+            }
+
+            for (; i < cellCount; ++i)
             {
                 GameCell cell = new GameCell()
                 {
@@ -84,7 +91,7 @@ namespace Minesweeper
             // Show all the cells
             foreach (GameCell child in Field.Children)
             {
-                child.GameElement.SetVisible();
+                child.GameElement?.SetVisible();
             }
 
             string result = $"Game {(sender as Minefield).State}";
@@ -99,6 +106,18 @@ namespace Minesweeper
         {
             OnNewGame?.Invoke(this, new EventArgs());
             ClearMinefield();
+        }
+
+        private void UserControl_Loaded(object sender, RoutedEventArgs e)
+        {
+            this.Dispatcher.InvokeAsync(() =>
+            {
+                for (int i = 0; i < 500; ++i)
+                {
+                    GameCell cell = new GameCell();
+                    Field.Children.Add(cell);
+                }
+            }, DispatcherPriority.Loaded);
         }
     }
 }
