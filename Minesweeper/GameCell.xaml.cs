@@ -5,7 +5,7 @@ using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-
+using System.Windows.Media;
 
 namespace Minesweeper
 {
@@ -80,22 +80,12 @@ namespace Minesweeper
             switch (VisState)
             {
                 case Cell.ViewState.Hidden:
-                    Text.Text = "H";
+                    Text.Foreground = Brushes.Red;
+                    DisplayHiddenState();
                     break;
 
                 case Cell.ViewState.Visible:
-                    if (GameElement.Mine == Cell.MineState.Bomb)
-                    {
-                        Text.Text = "*";
-                    }
-                    else if (GameElement.BombNeighbors > 0)
-                    {
-                        Text.Text = GameElement.BombNeighbors.ToString();
-                    }
-                    else
-                    {
-                        Text.Text = "";
-                    }
+                    DisplayVisibleState();
                     break;
 
                 default:
@@ -103,14 +93,48 @@ namespace Minesweeper
             }
         }
 
+        private void DisplayVisibleState()
+        {
+            if (GameElement.Mine == Cell.MineState.Bomb)
+            {
+                Text.Text = "*";
+            }
+            else if (GameElement.BombNeighbors > 0)
+            {
+                Text.Foreground = Brushes.LightSkyBlue;
+                Text.Text = GameElement.BombNeighbors.ToString();
+            }
+            else
+            {
+                Text.Text = "";
+            }
+        }
+
+        private void DisplayHiddenState()
+        {
+            var brush = Brushes.LightGreen;
+            switch (_GameElement?.Flag)
+            {
+                case Cell.FlagState.Flagged:
+                    Text.Text = "F";
+                    break;
+                case Cell.FlagState.QuestionMark:
+                    Text.Text = "?";
+                    break;
+                default:
+                    Text.Text = "H";
+                    brush = Brushes.Red;
+                    break;
+            }
+
+            Text.Foreground = brush;
+        }
+
         private void GameElement_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            Debug.Assert(e.PropertyName == nameof(Cell.View));
+            Debug.Assert(e.PropertyName == nameof(Cell.View) || e.PropertyName == nameof(Cell.Flag));
 
-            if ((sender as Cell).View == Cell.ViewState.Visible)
-            {
-                UpdateDisplay();
-            }
+            UpdateDisplay();
         }
 
         private void GameCell_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -154,6 +178,15 @@ namespace Minesweeper
             {
                 Pressed = false;
             }
+        }
+
+        private void Grid_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        {
+        }
+
+        private void Grid_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            GameElement.ToggleFlag();
         }
     }
 }

@@ -123,20 +123,25 @@ namespace Minesweeper
 
         public bool SelectPoint(Point p)
         {
-            if(!Initialized)
+            if (!Initialized)
             {
                 GenerateField(p, NumBombs);
                 Initialized = true;
             }
 
-            if (GetCell(p).Mine == Cell.MineState.Bomb)
+            var selected = GetCell(p);
+
+            if (selected.Trigger())
             {
                 State = GameState.Lost;
 
                 return true;
             }
 
-            ClearCells(p);
+            if (selected.View == Cell.ViewState.Visible)
+            {
+                ClearCells(p);
+            }
 
             var hiddenCells = from cell in Playfield
                               where cell.View == Cell.ViewState.Hidden

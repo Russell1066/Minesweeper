@@ -58,6 +58,11 @@ namespace Minesweeper
             }
         }
 
+        internal void ClearFlag()
+        {
+            Flag = FlagState.None;
+        }
+
         internal void ToggleFlag()
         {
             if (View == ViewState.Visible)
@@ -81,6 +86,16 @@ namespace Minesweeper
             }
 
             OnPropertyChanged(nameof(Flag));
+        }
+
+        internal bool Trigger()
+        {
+            if(Flag == FlagState.None)
+            {
+                SetVisible();
+            }
+
+            return Flag == FlagState.None && Mine == MineState.Bomb;
         }
 
         public override string ToString()

@@ -10,7 +10,7 @@
           MouseLeftButtonDown="GameCell_MouseLeftButtonDown" 
           MouseLeftButtonUp="GameCell_MouseLeftButtonUp" 
           MouseEnter="GameCell_MouseEnter" 
-          MouseLeave="GameCell_MouseLeave" Background="Black"
+          MouseLeave="GameCell_MouseLeave" Background="Black" MouseRightButtonDown="Grid_MouseRightButtonDown" MouseRightButtonUp="Grid_MouseRightButtonUp"
           >
         <TextBlock Margin="3" Text="H" 
                    HorizontalAlignment="Center" 
