@@ -99,6 +99,11 @@ namespace Minesweeper
             }
         }
 
+        internal List<int> GetNeighbors(int index)
+        {
+            return GetNeighbors(IndexToPoint(index));
+        }
+
         private List<int> GetNeighbors(Point p)
         {
             ValidatePoint(p);
@@ -233,7 +238,7 @@ namespace Minesweeper
             Trace.WriteLine($"{v.Count()} Hidden - with {NumBombs} bombs");
         }
 
-        private int PointToIndex(Point p)
+        public int PointToIndex(Point p)
         {
             ValidatePoint(p);
             return p.Row * Width + p.Col;
@@ -322,6 +327,7 @@ namespace Minesweeper
 
             return bombLocations;
         }
+
         protected void OnPropertyChanged(string name)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));

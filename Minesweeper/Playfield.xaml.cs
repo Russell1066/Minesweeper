@@ -85,6 +85,11 @@ namespace Minesweeper
 
         private void Game_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
+            Dispatcher.Invoke(() => GamePropertyChanged(sender, e));
+        }
+
+        private void GamePropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
             Debug.Assert(sender == game);
             Debug.Assert(e.PropertyName == nameof(Minefield.State));
 

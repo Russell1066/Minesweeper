@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -21,6 +22,8 @@ namespace Minesweeper
     public partial class MainWindow : Window
     {
         private Minefield Mines;
+        private AiPlayer Player;
+        private bool Playing = false;
 
         public MainWindow()
         {
@@ -33,6 +36,8 @@ namespace Minesweeper
         {
             Mines = new Minefield(cols, rows, numBombs);
             Game.Initialize(Mines);
+            Player = new AiPlayer(Mines);
+
             Game.Visibility = Visibility.Visible;
             Menu.Visibility = Visibility.Hidden;
         }
@@ -61,6 +66,28 @@ namespace Minesweeper
         private void Button_Click_30x16(object sender, RoutedEventArgs e)
         {
             CreatePlayfield(30, 16, 99);
+        }
+
+        private async void Button_MoveAi(object sender, RoutedEventArgs e)
+        {
+            if (Playing)
+            {
+                return;
+            }
+
+            Playing = true;
+            bool? stop = false;
+            while (Mines.State == Minefield.GameState.Playing && stop.HasValue && stop.Value != true)
+            {
+                await Task.Run(() =>
+                {
+                    stop = !Player?.Move();
+
+                    Thread.Sleep(100);
+                });
+            }
+
+            Playing = false;
         }
     }
 }

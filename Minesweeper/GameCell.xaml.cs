@@ -71,6 +71,15 @@ namespace Minesweeper
                 return;
             }
 
+            if(GameElement.AI == Cell.AiState.Thinking)
+            {
+                Text.Background = Brushes.Cornsilk;
+            }
+            else
+            {
+                Text.Background = Brushes.Black;
+            }
+
             if (Pressed)
             {
                 Text.Text = "P";
@@ -132,9 +141,7 @@ namespace Minesweeper
 
         private void GameElement_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            Debug.Assert(e.PropertyName == nameof(Cell.View) || e.PropertyName == nameof(Cell.Flag));
-
-            UpdateDisplay();
+            Dispatcher.BeginInvoke(new Action(()=> UpdateDisplay()));
         }
 
         private void GameCell_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)

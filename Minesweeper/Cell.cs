@@ -29,10 +29,17 @@ namespace Minesweeper
             Bomb
         }
 
+        internal enum AiState
+        {
+            None,
+            Thinking
+        };
+
         public event PropertyChangedEventHandler PropertyChanged;
         internal ViewState View { get; set; }
         internal MineState Mine { get; private set; }
         internal FlagState Flag { get; set; }
+        internal AiState AI { get; private set; }
         internal int BombNeighbors { get; set; }
         internal int Index { get; }
 
@@ -46,6 +53,12 @@ namespace Minesweeper
         internal void SetMine()
         {
             Mine = MineState.Bomb;
+        }
+
+        internal void SetAI(AiState newState)
+        {
+            AI = newState;
+            OnPropertyChanged(nameof(AI));
         }
 
         internal void SetVisible()
@@ -70,7 +83,7 @@ namespace Minesweeper
                 return;
             }
 
-            switch(Flag)
+            switch (Flag)
             {
                 case FlagState.None:
                     Flag = FlagState.Flagged;
@@ -90,7 +103,7 @@ namespace Minesweeper
 
         internal bool Trigger()
         {
-            if(Flag == FlagState.None)
+            if (Flag == FlagState.None)
             {
                 SetVisible();
             }
